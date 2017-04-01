@@ -1,7 +1,11 @@
+extern crate rayon;
+
 use std::collections::HashSet;
 use std::collections::LinkedList;
 use std::thread;
 use std::sync::mpsc;
+
+use rayon::prelude::*;
 
 /// Calculates the collatz conjecture for a given number `starting_number`.
 /// Returns a `Vec<u32>` of the number trail.
@@ -34,27 +38,9 @@ pub fn number(starting_number: u32) -> LinkedList<u32> {
 /// ```
 pub fn up_to(final_number: u32) -> HashSet<u32> {
     let mut hset: HashSet<u32> = HashSet::new();
-    let (tx, rx) = mpsc::channel();
 
     for i in 1..final_number {
-        // TODO: Spawn threads which does the while calculation
-        // Collect these values and put them in the hashset synchronously
 
-        let tx = tx.clone();
-        thread::spawn(move || {
-            // Send back number(i) vector for addition to hashset
-            tx.send(number(i))
-                .expect("Thread panicked when sending computation.");
-        });
-
-    }
-
-    drop(tx);
-
-    for recv in rx {
-        for i in recv {
-            hset.insert(i);
-        }
     }
 
     hset
