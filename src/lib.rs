@@ -38,9 +38,17 @@ pub fn number(starting_number: u32) -> LinkedList<u32> {
 /// ```
 pub fn up_to(final_number: u32) -> HashSet<u32> {
     let mut hset: HashSet<u32> = HashSet::new();
+    let mut ans: Vec<LinkedList<u32>> = Vec::new();
 
-    for i in 1..final_number {
+    (1..final_number)
+        .into_par_iter()
+        .map(|x| number(x)) // fn number(u32) -> LinkedList<u32>
+        .collect_into(&mut ans);
 
+    for ls in ans {
+        for i in ls {
+            hset.insert(i);
+        }
     }
 
     hset
