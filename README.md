@@ -6,15 +6,9 @@ Usage: `collatzconjecture METHOD NUMBER [OPTION]`
 
 ### Performance
 
-Note that these are [unoptimized + debuginfo] timings, for now.
+Compile rust [optimized] + these flags: `RUSTFLAGS="-C target-cpu=native -C target-feature=+avx,+mmx,+popcnt,+sse,+sse2,+sse3,+ssse3"`
 
-Non-concurrent (synchronous branch):
-`time cargo run iterate 100000` 10.63-11.37s
-
-1:1 concurrent (concurrency branch):
-`time cargo run iterate 100000` 15.55-17.01s
-
-Too much overhead when using 1:1.
+Synchronous solution: `[.12s .. ..16s]`
 
 ## Background
 
@@ -28,4 +22,5 @@ Algorithm:
             multiply by three and add one
 
 ## License
+
 MIT
