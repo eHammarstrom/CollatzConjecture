@@ -8,11 +8,11 @@ use std::sync::mpsc;
 use rayon::prelude::*;
 
 /// Calculates the collatz conjecture for a given number `starting_number`.
-/// Returns a `Vec<u32>` of the number trail.
+/// Returns a `LinkedList<u32>` of the number trail.
 ///
 /// # Examples
 /// ```
-/// let ls: Vec<u32> = collatzconjecture::number(10000);
+/// let ls: LinkedList<u32> = collatzconjecture::number(10000);
 /// ```
 pub fn number(starting_number: u32) -> LinkedList<u32> {
     let mut number_trail: LinkedList<u32> = LinkedList::new();
