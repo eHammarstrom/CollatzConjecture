@@ -8,7 +8,7 @@ Usage: `collatzconjecture METHOD NUMBER [OPTION]`
 
 Compile rust [optimized] + these flags: `RUSTFLAGS="-C target-cpu=native -C target-feature=+avx,+mmx,+popcnt,+sse,+sse2,+sse3,+ssse3"`
 
-Synchronous solution: `[.12s .. ..16s]`
+Synchronous solution: `[0.12s .. 0.16s]`
 
 ## Background
 
