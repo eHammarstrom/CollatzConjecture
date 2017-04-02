@@ -1,9 +1,7 @@
 extern crate rayon;
+extern crate bit_vec;
 
-use std::collections::HashSet;
-use std::collections::LinkedList;
-use std::thread;
-use std::sync::mpsc;
+use bit_vec::BitVec;
 
 use rayon::prelude::*;
 
@@ -12,46 +10,62 @@ use rayon::prelude::*;
 ///
 /// # Examples
 /// ```
-/// let ls: LinkedList<u32> = collatzconjecture::number(10000);
+/// let ls: LinkedList<u32> = collatzconjecture::number_trail(10000);
 /// ```
-pub fn number(starting_number: u32) -> LinkedList<u32> {
-    let mut number_trail: LinkedList<u32> = LinkedList::new();
-
+pub fn number_trail(starting_number: u32) -> BitVec<u32> {
     let mut temp = starting_number;
-    number_trail.push_front(temp);
+
+    let mut bv = BitVec::from_elem(temp as usize, true);
 
     while temp != 1 {
         temp = collatizer(temp);
-        number_trail.push_front(temp);
+
+        let len = bv.len();
+        if len <= (temp as usize) {
+            bv.grow(temp as usize + 1 - len, false);
+        }
+
+        bv.set(temp as usize, true);
     }
 
-    number_trail
+    bv
 }
 
 /// Calculates the collatz conjecture for each number up to `final_number`.
-/// Returns a `HashSet<u32>` without duplicates of trail hits.
+/// Returns a `Vec<u32>` without duplicates of trail hits.
 ///
 /// # Examples
 ///
 /// ```
-/// let hset: HashSet<u32> = collatzconjecture::up_to(1000);
+/// let set: Vec<u32> = collatzconjecture::up_to(1000);
 /// ```
-pub fn up_to(final_number: u32) -> HashSet<u32> {
-    let mut hset: HashSet<u32> = HashSet::new();
-    let mut ans: Vec<LinkedList<u32>> = Vec::new();
+pub fn up_to(final_number: u32) -> Vec<u32> {
+    let mut v: Vec<u32> = Vec::new();
 
-    (1..final_number)
-        .into_par_iter()
-        .map(|x| number(x)) // fn number(u32) -> LinkedList<u32>
-        .collect_into(&mut ans);
+    let bv: BitVec<u32> = bit_vec_up_to(final_number);
 
-    for ls in ans {
-        for i in ls {
-            hset.insert(i);
+    for (i, x) in bv.iter().enumerate() {
+        if x == true {
+            v.push(i as u32 + 1);
         }
     }
 
-    hset
+    v
+}
+
+fn bit_vec_up_to(final_number: u32) -> BitVec<u32> {
+    let bvs: Vec<BitVec<u32>> = (1..final_number)
+        .into_par_iter()
+        .map(|x| number_trail(x))
+        .collect();
+
+    let mut final_bv = bvs[0].clone();
+
+    for x in bvs {
+        final_bv.union(&x);
+    }
+
+    final_bv
 }
 
 fn collatizer(number: u32) -> u32 {
