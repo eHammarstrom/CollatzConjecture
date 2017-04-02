@@ -34,7 +34,10 @@ pub fn up_to(final_number: u32) -> HashSet<u32> {
 
     for i in 1..final_number {
         let mut temp = i;
-        hset.insert(temp);
+
+        if hset.insert(temp) == false {
+            continue;
+        }
 
         while temp != 1 {
             temp = collatizer(temp);

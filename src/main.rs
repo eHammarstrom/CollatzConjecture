@@ -21,8 +21,8 @@ fn main() {
     });
 
     if args[1] == "iterate" {
-        println!("{:?}", collatzconjecture::up_to(x));
+        println!("{:?}", collatzconjecture::up_to(x).len());
     } else if args[1] == "calculate" {
-        println!("{:?}", collatzconjecture::number(x));
+        println!("{:?}", collatzconjecture::number(x).len());
     }
 }
